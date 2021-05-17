@@ -6,7 +6,7 @@
 /*   By: oliver <oliver@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 22:28:17 by oliver            #+#    #+#             */
-/*   Updated: 2021/04/03 22:41:50 by oliver           ###   ########.fr       */
+/*   Updated: 2021/05/17 17:29:20 by oliver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef	struct		s_line
 	char			*excess;
 	char			*temp;
 	int				has_been_read;
+	int				read_ret;
 	size_t			content_size;
 }					t_line;
 

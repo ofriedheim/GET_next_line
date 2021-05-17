@@ -6,14 +6,12 @@
 /*   By: oliver <oliver@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 22:59:48 by oliver            #+#    #+#             */
-/*   Updated: 2021/04/03 23:11:01 by oliver           ###   ########.fr       */
+/*   Updated: 2021/05/17 17:46:25 by oliver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-#define TRUE 1
-#define FALSE 0
+#include <stdio.h>
 
 int		check_for_line(char *buf)
 {
@@ -23,9 +21,9 @@ int		check_for_line(char *buf)
 	while (buf[++i])
 	{
 		if (buf[i] == '\n')
-			return (TRUE);
+			return (1);
 	}
-	return (FALSE);
+	return (0);
 }
 
 char	*gnl_cat(char *s1, char *s2)
@@ -69,21 +67,19 @@ void	split(t_line *lines)
 
 void	reading(int fd, char *buf, t_line *lines)
 {
-	int		read_ret;
-
-	read_ret = 0;
-	lines->has_been_read = TRUE;
-	while ((read_ret = (read(fd, buf, BUFFER_SIZE))))
+	lines->has_been_read = 1;
+	while ((lines->read_ret = (read(fd, buf, BUFFER_SIZE))))
 	{
-		buf[read_ret] = '\0';
+		printf("lines->read_ret == %d\n", lines->read_ret);
+		buf[lines->read_ret] = '\0';
 		if (lines->temp[0])
 			lines->temp = gnl_cat(lines->temp, buf);
 		else
 			lines->temp = ft_strdup(buf);
-		if (check_for_line(lines->temp) == TRUE)
+		if (check_for_line(lines->temp) == 1)
 			break ;
 	}
-	if (read_ret == 0)
+	if (lines->read_ret < BUFFER_SIZE)
 		lines->content = ft_strdup(lines->excess);
 }
 
@@ -100,9 +96,10 @@ int		get_next_line(int fd, char **line)
 		ft_bzero((lines[fd]->content = (char*)malloc(sizeof(char*))), 1);
 		ft_bzero((lines[fd]->excess = (char*)malloc(sizeof(char*))), 1);
 		ft_bzero((lines[fd]->temp = (char*)malloc(sizeof(char*))), 1);
-		lines[fd]->has_been_read = FALSE;
+		lines[fd]->has_been_read = 0;
+		lines[fd]->read_ret = 0;
 	}
-	if (lines[fd]->has_been_read == TRUE)
+	if (lines[fd]->has_been_read == 1)
 	{
 		ft_bzero(lines[fd]->temp, ft_strlen(lines[fd]->temp));
 		lines[fd]->temp = ft_strdup(lines[fd]->excess);
@@ -111,7 +108,7 @@ int		get_next_line(int fd, char **line)
 	reading(fd, buf, lines[fd]);
 	split(lines[fd]);
 	*line = lines[fd]->content;
-	if (lines[fd]->excess[0] == '\0')
+	if (lines[fd]->read_ret < BUFFER_SIZE)
 		return (0);
 	return (1);
 }
