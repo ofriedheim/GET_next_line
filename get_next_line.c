@@ -6,7 +6,7 @@
 /*   By: oliver <oliver@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 22:59:48 by oliver            #+#    #+#             */
-/*   Updated: 2021/05/17 17:46:25 by oliver           ###   ########.fr       */
+/*   Updated: 2021/05/17 18:30:28 by oliver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	reading(int fd, char *buf, t_line *lines)
 	lines->has_been_read = 1;
 	while ((lines->read_ret = (read(fd, buf, BUFFER_SIZE))))
 	{
-		printf("lines->read_ret == %d\n", lines->read_ret);
 		buf[lines->read_ret] = '\0';
 		if (lines->temp[0])
 			lines->temp = gnl_cat(lines->temp, buf);
@@ -80,7 +79,7 @@ void	reading(int fd, char *buf, t_line *lines)
 			break ;
 	}
 	if (lines->read_ret < BUFFER_SIZE)
-		lines->content = ft_strdup(lines->excess);
+		lines->content = ft_strdup(lines->temp);
 }
 
 int		get_next_line(int fd, char **line)
