@@ -6,7 +6,7 @@
 /*   By: oliver <oliver@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 22:59:48 by oliver            #+#    #+#             */
-/*   Updated: 2021/05/17 18:30:28 by oliver           ###   ########.fr       */
+/*   Updated: 2021/05/18 14:50:27 by oliver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void	reading(int fd, char *buf, t_line *lines)
 	lines->has_been_read = 1;
 	while ((lines->read_ret = (read(fd, buf, BUFFER_SIZE))))
 	{
+		if (lines->read_ret <= 0)
+			break ;
 		buf[lines->read_ret] = '\0';
 		if (lines->temp[0])
 			lines->temp = gnl_cat(lines->temp, buf);
@@ -78,7 +80,7 @@ void	reading(int fd, char *buf, t_line *lines)
 		if (check_for_line(lines->temp) == 1)
 			break ;
 	}
-	if (lines->read_ret < BUFFER_SIZE)
+	if (lines->read_ret < BUFFER_SIZE && lines->read_ret != 0)
 		lines->content = ft_strdup(lines->temp);
 }
 
@@ -87,7 +89,7 @@ int		get_next_line(int fd, char **line)
 	static t_line	*lines[1000];
 	char			buf[BUFFER_SIZE + 1];
 
-	if (fd < 0 || fd > 4096 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || (read(fd, lines[fd], 0) < 0))
 		return (-1);
 	if (!lines[fd])
 	{
