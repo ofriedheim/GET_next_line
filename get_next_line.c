@@ -6,7 +6,7 @@
 /*   By: oliver <oliver@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 22:59:48 by oliver            #+#    #+#             */
-/*   Updated: 2021/05/18 14:50:27 by oliver           ###   ########.fr       */
+/*   Updated: 2021/05/27 13:56:43 by oliver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,14 @@ void	split(t_line *lines)
 	while (ptr[++i])
 		if (ptr[i] == '\n')
 			break ;
-	lines->content = ft_substr(lines->temp, 0, i);
+	lines->content = ft_substr(lines->temp, 0, i + 1);
 	lines->excess = ft_substr(lines->temp, i + 1, ft_strlen(lines->temp));
 }
 
 void	reading(int fd, char *buf, t_line *lines)
 {
 	lines->has_been_read = 1;
-	while ((lines->read_ret = (read(fd, buf, BUFFER_SIZE))))
+	while ( !check_for_line(lines->temp) && (lines->read_ret = (read(fd, buf, BUFFER_SIZE))))
 	{
 		if (lines->read_ret <= 0)
 			break ;
@@ -109,7 +109,7 @@ int		get_next_line(int fd, char **line)
 	reading(fd, buf, lines[fd]);
 	split(lines[fd]);
 	*line = lines[fd]->content;
-	if (lines[fd]->read_ret < BUFFER_SIZE)
+	if (lines[fd]->read_ret == 0 && lines[fd]->temp[0] == '\0')
 		return (0);
 	return (1);
 }

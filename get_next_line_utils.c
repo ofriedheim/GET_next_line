@@ -6,7 +6,7 @@
 /*   By: oliver <oliver@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 22:28:30 by oliver            #+#    #+#             */
-/*   Updated: 2021/05/14 17:33:16 by oliver           ###   ########.fr       */
+/*   Updated: 2021/05/18 15:20:35 by oliver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ char	*ft_strnew(size_t size)
 	if (!(str = (char *)malloc(sizeof(char) * size + 1)))
 		return (NULL);
 	str[size] = '\0';
-	while (size--)
-		str[size] = '\0';
+	while (size)
+		str[--size] = '\0';
 	return (str);
 }
 
